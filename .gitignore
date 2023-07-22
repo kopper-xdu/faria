@@ -1,3 +1,8 @@
+# Custom
+# test_lib/
+native_aria2/
+aria2/
+
 # Miscellaneous
 *.class
 *.log
