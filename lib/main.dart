@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'native_aria2.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,8 +50,8 @@ class HomeBody extends StatelessWidget {
         // child: Text('aria2c'),
         child: material.ElevatedButton(
           child: const Text('aria2c'),
-          onPressed: () async {
-            final int result = await aria2c('https://mirror.clarkson.edu/ubuntu-releases/22.04.2/ubuntu-22.04.2-desktop-amd64.iso');
+          onPressed: () {
+            final result = compute(aria2c, 'https://mirrors.xjtu.edu.cn/ubuntu-releases/22.04.2/ubuntu-22.04.2-desktop-amd64.iso');
             print(result);
           },
         )
