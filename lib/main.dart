@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'native_aria2.dart';
 import 'package:flutter/foundation.dart';
+import 'my_dialog.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     PaneItem(
       icon: const Icon(FluentIcons.home),
       title: const Text('Home'),
-      body: const HomeBody(),
+      body: HomeBody(),
     ),
   ];
 
@@ -37,28 +38,98 @@ class MyApp extends StatelessWidget {
 
 
 class HomeBody extends StatelessWidget {
-  const HomeBody({super.key});
+  HomeBody({super.key});
 
-
+  final downloadList = Column(
+    children: [
+      Text('misson 1'),
+      Text('misson 2'),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        // child: Text('Home'),
-        // child: Text('aria2c'),
-        child: material.ElevatedButton(
-          child: const Text('aria2c'),
-          onPressed: () {
-            final result = compute(aria2c, 'https://mirrors.xjtu.edu.cn/ubuntu-releases/22.04.2/ubuntu-22.04.2-desktop-amd64.iso');
-            print(result);
-          },
-        )
-      ),
+    return Column(
+      children: [
+        ControlRow(),
+        downloadList,
+      ],
     );
   }
 }
+
+class ControlRow extends StatelessWidget {
+  ControlRow({super.key});
+
+  void addDownloadEvent(BuildContext context) {
+    showDialog<String>(
+        context: context,
+        builder: (context) => DownloadEventDialog(
+          actions: [
+                Button(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                        Navigator.pop(context, 'User deleted file');
+                    },
+                ),
+                FilledButton(
+                    child: const Text('Confirm'),
+                    onPressed: () => Navigator.pop(context, 'User canceled dialog'),
+                    // TODO: add download event
+                ),
+            ],
+        ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final simpleCommandBarItems = <CommandBarItem>[
+      CommandBarBuilderItem(
+          builder: (context, mode, w) => Tooltip(
+              message: "Create something new!",
+              child: w,
+          ),
+          wrappedItem: CommandBarButton(
+              icon: const Icon(FluentIcons.add),
+              label: const Text('New'),
+              onPressed: () => addDownloadEvent(context),
+          ),
+      ),
+      CommandBarBuilderItem(
+          builder: (context, mode, w) => Tooltip(
+              message: "Delete what is currently selected!",
+              child: w,
+          ),
+          wrappedItem: CommandBarButton(
+              icon: const Icon(FluentIcons.delete),
+              label: const Text('Delete'),
+              onPressed: () {},
+          ),
+      ),
+    ];
+
+
+    return Row(
+      children: [
+        Text('任务列表'),
+        /// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
+        Expanded(
+          child: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+          primaryItems: [
+            ...simpleCommandBarItems,
+            const CommandBarSeparator(),
+          ],
+          // secondaryItems: evenMoreCommandBarItems,
+        ),
+        )
+      ],
+    );
+  }
+}
+
 
 // class MyHomePage extends StatefulWidget {
 //   const MyHomePage({super.key, required this.title});
